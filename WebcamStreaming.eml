@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component LANGUAGE_LEVEL="JDK_1_5" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
+	<levels>
+		<level name="Maven: com.github.sarxos:webcam-capture:0.3.10" value="project"/>
+		<level name="Maven: com.nativelibs4java:bridj:0.6.2" value="project"/>
+		<level name="Maven: org.slf4j:slf4j-api:1.7.2" value="project"/>
+	</levels>
+</component>
