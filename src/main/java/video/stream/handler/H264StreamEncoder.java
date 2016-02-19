@@ -13,7 +13,7 @@ import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.sosia.video.stream.handler.frame.FrameEncoder;
+import video.stream.handler.frame.FrameEncoder;
 
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IMetaData;

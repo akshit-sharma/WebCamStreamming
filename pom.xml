@@ -23,6 +23,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>xuggle</groupId>
+            <artifactId>xuggle-xuggler</artifactId>
+            <version>5.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.boofcv</groupId>
             <artifactId>xuggler</artifactId>
             <version>0.16</version>
