@@ -23,10 +23,12 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="WebcamStreaming" />
+        <module name="WebCamStreamming" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="WebcamStreaming" target="1.5" />
+      <module name="WebCamStreamming" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
