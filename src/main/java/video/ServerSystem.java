@@ -2,8 +2,9 @@ package video;
 
 import com.github.sarxos.webcam.Webcam;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.html.ImageView;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
@@ -15,12 +16,14 @@ import java.net.Socket;
 public class ServerSystem {
 
     private static final int PORT = 8088;
-    private ImageView imageView;
+    private ImagePanel imagePanel;
 
     ServerSystem(){
         JFrame jFrame = new JFrame();
 
-        imageView = new ImageView();
+        imagePanel = new ImagePanel();
+
+        jFrame.add(imagePanel);
 
         jFrame.setSize(400,600);
         jFrame.setVisible(true);
@@ -65,12 +68,8 @@ public class ServerSystem {
 
 
                             InputStream is =fin.getInputStream();
-                            byte[] data = new byte[1024];
-                            int count=0;
-                            count = is.read(data, 0, 1024);
-                            while (count != -1){
-                                count = is.read(data, 0, 1024);
-                            }
+                            BufferedImage imBuff = ImageIO.read(is);
+                            imagePanel.update(imBuff);
                             fin.close();
                             System.out.println("Done receiving");
                         } catch (IOException e) {
