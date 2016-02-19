@@ -7,8 +7,8 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 
-import us.sosia.video.stream.handler.StreamServerHandler;
-import us.sosia.video.stream.handler.StreamServerListener;
+import video.stream.handler.StreamServerHandler;
+import video.stream.handler.StreamServerListener;
 
 public class StreamServerChannelPipelineFactory implements ChannelPipelineFactory{
 	protected final StreamServerListener streamServerListener;

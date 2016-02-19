@@ -18,9 +18,9 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.sosia.video.stream.channel.StreamServerChannelPipelineFactory;
-import us.sosia.video.stream.handler.H264StreamEncoder;
-import us.sosia.video.stream.handler.StreamServerListener;
+import video.stream.channel.StreamServerChannelPipelineFactory;
+import video.stream.handler.H264StreamEncoder;
+import video.stream.handler.StreamServerListener;
 
 import com.github.sarxos.webcam.Webcam;
 
@@ -47,8 +47,7 @@ public class StreamServerAgent implements IStreamServerAgent{
 				Executors.newCachedThreadPool(),
 				Executors.newCachedThreadPool()));
 		this.serverBootstrap.setPipelineFactory(new StreamServerChannelPipelineFactory(
-				new StreamServerListenerIMPL(),
-				dimension));
+				new StreamServerListenerIMPL(),dimension));
 		this.timeWorker = new ScheduledThreadPoolExecutor(1);
 		this.encodeWorker = Executors.newSingleThreadExecutor();
 		this.h264StreamEncoder = new H264StreamEncoder(dimension, false);

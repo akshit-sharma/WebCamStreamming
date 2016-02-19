@@ -10,9 +10,9 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.sosia.video.stream.channel.StreamClientChannelPipelineFactory;
-import us.sosia.video.stream.handler.StreamClientListener;
-import us.sosia.video.stream.handler.StreamFrameListener;
+import video.stream.channel.StreamClientChannelPipelineFactory;
+import video.stream.handler.StreamClientListener;
+import video.stream.handler.StreamFrameListener;
 
 public class StreamClientAgent implements IStreamClientAgent{
 	protected final static Logger logger = LoggerFactory.getLogger(StreamClientAgent.class);
@@ -38,10 +38,7 @@ public class StreamClientAgent implements IStreamClientAgent{
 		this.streamFrameListener = streamFrameListener;
 		this.streamClientListener = new StreamClientListenerIMPL();
 		this.clientBootstrap.setPipelineFactory(
-				new StreamClientChannelPipelineFactory(
-						streamClientListener,
-						streamFrameListener, 
-						dimension));
+				new StreamClientChannelPipelineFactory(streamClientListener,streamFrameListener,dimension));
 	}
 
 	@Override

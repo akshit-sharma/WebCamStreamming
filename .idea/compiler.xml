@@ -23,12 +23,18 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="WebcamStreaming" />
+      </profile>
+      <profile default="false" name="Annotation profile for WebCamStreamming" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="WebCamStreamming" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="WebcamStreaming" target="1.5" />
-      <module name="WebCamStreamming" target="1.5" />
+      <module name="WebCamStreamming" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

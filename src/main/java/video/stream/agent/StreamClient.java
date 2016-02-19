@@ -7,8 +7,8 @@ import java.net.InetSocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.sosia.video.stream.agent.ui.SingleVideoDisplayWindow;
-import us.sosia.video.stream.handler.StreamFrameListener;
+import video.stream.agent.ui.SingleVideoDisplayWindow;
+import video.stream.handler.StreamFrameListener;
 
 public class StreamClient {
 	/**

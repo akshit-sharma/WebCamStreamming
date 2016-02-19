@@ -7,10 +7,10 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
 
-import us.sosia.video.stream.handler.H264StreamDecoder;
-import us.sosia.video.stream.handler.StreamClientHandler;
-import us.sosia.video.stream.handler.StreamClientListener;
-import us.sosia.video.stream.handler.StreamFrameListener;
+import video.stream.handler.H264StreamDecoder;
+import video.stream.handler.StreamClientHandler;
+import video.stream.handler.StreamClientListener;
+import video.stream.handler.StreamFrameListener;
 
 public class StreamClientChannelPipelineFactory implements ChannelPipelineFactory{
 	protected final StreamClientListener streamClientListener;

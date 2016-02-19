@@ -12,7 +12,7 @@ import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.sosia.video.stream.handler.frame.FrameDecoder;
+import video.stream.handler.frame.FrameDecoder;
 
 import com.xuggle.ferry.IBuffer;
 import com.xuggle.xuggler.ICodec;

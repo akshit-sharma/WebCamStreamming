@@ -10,7 +10,7 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import us.sosia.video.stream.handler.frame.FrameDecoder;
+import video.stream.handler.frame.FrameDecoder;
 
 public class StreamClientHandler extends SimpleChannelHandler{
 	protected final StreamClientListener streamClientListener;
