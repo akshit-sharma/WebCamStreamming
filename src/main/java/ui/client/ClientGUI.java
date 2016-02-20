@@ -61,7 +61,7 @@ public class ClientGUI implements WindowListener {
 
         jFrame.addWindowListener(this);
 
-        jFrame.setSize(800,300);
+        jFrame.setSize(800, 300);
         jFrame.setVisible(true);
 
         new VideoStreamer(imagePanel).start();
@@ -201,8 +201,6 @@ class VideoStreamer extends Thread{
 
                     sock = new Socket(connectAdd,Configuration.SERVER_PORT);
 
-                    new VideoStreamer(1).start();
-
                     OutputStream outputStream = sock.getOutputStream();
                     BufferedImage image = webcam.getImage();
 
@@ -235,11 +233,11 @@ class VideoStreamer extends Thread{
         super.run();
 
         switch (status){
-            case 0: new VideoStreamer(2).start();
+            case 0: new VideoStreamer(2).start();new VideoStreamer(1).start();
                 break;
             case 1:
                 try {
-                    sleep(1000);
+                    sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
