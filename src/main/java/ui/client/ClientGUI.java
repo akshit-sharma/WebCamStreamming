@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class ClientGUI implements WindowListener {
 
     private JTextField jTextField;
-    private TextArea chatArea;
+    private JTextArea chatArea;
     private ImagePanel imagePanel;
 
     public ClientGUI(){
@@ -40,7 +40,7 @@ public class ClientGUI implements WindowListener {
 
         imageArea.add(imagePanel, BorderLayout.CENTER);
 
-        chatArea = new TextArea();
+        chatArea = new JTextArea();
         chatArea.setEditable(false);
 
         JPanel chatBar = new JPanel();
@@ -52,7 +52,7 @@ public class ClientGUI implements WindowListener {
         chatBar.add(sendButton,BorderLayout.EAST);
 
         imageArea.setSize(500, 200);
-
+        new TextStream(chatArea,jTextField,sendButton).start();
         jFrame.setLayout(new BorderLayout());
 
         jFrame.add(imageArea, BorderLayout.CENTER);
