@@ -5,10 +5,12 @@ import com.github.sarxos.webcam.Webcam;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 /**
  * Created by akshit on 2/20/2016.
@@ -17,6 +19,7 @@ public class ServerSystem {
 
     private static final int PORT = 8088;
     private ImagePanel imagePanel;
+    private InputStream inputStream;
 
     ServerSystem(){
         JFrame jFrame = new JFrame();
@@ -38,51 +41,67 @@ public class ServerSystem {
             System.exit(1);
         }
 
-        ServerSocket sock = null;
-        try {
-            sock = new ServerSocket(PORT);
-        } catch (IOException e) {
-            System.out.println("Could not instantiate socket:");
-            e.printStackTrace();
-            return;
-        }
+        ServerSocket serverSocket = null;
+//        try {
+//
+//        } catch (IOException e) {
+//            System.out.println("Could not instantiate socket:");
+//            e.printStackTrace();
+//            return;
+//        }
 
-        Socket clientSock = null;
+        Socket socket = null;
+        BufferedImage image;
 
         while (true) {
 
             try {
+                serverSocket = new ServerSocket(PORT);
                 System.out.println("Waiting for connection...");
-                clientSock = sock.accept();
-                final Socket fin = clientSock;
+                socket = serverSocket.accept();
+                inputStream = socket.getInputStream();
+                //final Socket fin = clientSock;
                 System.out.println("Connection accepted");
-                System.out.println("Spawning thread...");
-                Thread trd = new Thread(new Runnable(){
-                    public void run(){
-                        try {
+
+                        while (true) {
+                            System.out.println("Sleeping thread...");
                             try {
-                                Thread.sleep(40);
-                            } catch (InterruptedException e) {
+
+                                   // Thread.currentThread().sleep(200);
+                                byte[] sizeAr = new byte[4];
+                                inputStream.read(sizeAr);
+                                int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+
+                                byte[] imageAr = new byte[size];
+                                inputStream.read(imageAr);
+
+                                image = ImageIO.read(new ByteArrayInputStream(imageAr));
+                                imagePanel.update(image);
+                                image = null;
+
+//                                System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+                                System.out.println("Done receiving");
+                                //TimeUnit.SECONDS.sleep(2);
+                                serverSocket.close(); //right here
+                                socket.close();
+                                break;
+                                }  catch (IOException e) {
                                 e.printStackTrace();
+                                System.out.println("Hell0ooo");
+                                break;
                             }
-
-
-                            InputStream is =fin.getInputStream();
-                            BufferedImage imBuff = ImageIO.read(is);
-                            imagePanel.update(imBuff);
-                            fin.close();
-                            System.out.println("Done receiving");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }}
-                });
-                trd.start();
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            }
+                        }
             }catch (IOException e){
                 System.out.println("Could not accept");
                 e.printStackTrace();
+                break;
             }
 
         }
+
     }
 
     public static void main(String[] args) {

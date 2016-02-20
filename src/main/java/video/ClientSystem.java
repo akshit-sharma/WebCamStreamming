@@ -4,11 +4,14 @@ import com.github.sarxos.webcam.Webcam;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by akshit on 2/20/2016.
@@ -17,7 +20,8 @@ public class ClientSystem {
     private static final int PORT =8088;
     private static InetAddress HOST_ADDRESS;
     private Socket sock = null;
-    private void go(){
+    public static boolean flag = true;
+    private void go() {
         Webcam webcam = Webcam.getDefault();
         if (webcam != null) {
             webcam.open();
@@ -27,26 +31,53 @@ public class ClientSystem {
             System.exit(1);
         }
 
-        try {
-            sock = new Socket("localhost", 8088);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        while(true) {
+        while (true) {
 
-            OutputStream out = null;
             try {
-                Thread.currentThread().sleep(40);
-                out = sock.getOutputStream();
-                BufferedImage image = webcam.getImage();
-                ImageIO.write(image, "JPG", out);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
+
+
+
+                    sock = new Socket("localhost", 8088);
+                    OutputStream outputStream = sock.getOutputStream();
+                    BufferedImage image = webcam.getImage();
+                    //FileOutputStream fileOutputStream = (FileOutputStream) sock.getOutputStream();
+                    //File file = new File("test.jpg");
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    ImageIO.write(image, "JPG", byteArrayOutputStream);
+
+                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+                    outputStream.write(size);
+                    outputStream.write(byteArrayOutputStream.toByteArray());
+                    outputStream.flush();
+                     TimeUnit.MILLISECONDS.sleep(10);
+                    sock.close();
+
+                //outputStream.flush();
+
+
+
+                    //Path path = Paths.get(file.getPath());
+                    //byte[] data = Files.readAllBytes(path);
+                    //fileOutputStream.write(data);
+                    //out.writeTo(sock.getOutputStream());
+                    //sock.getOutputStream().write(out.toByteArray());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+
+
+            }
+//
+//        try {
+//            sock.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
         }
     }
 
