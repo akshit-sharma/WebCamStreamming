@@ -69,7 +69,7 @@ public class ServerGUI implements WindowListener{
 
     public static void main(String[] args) {
         for(int i=0;i<4;i++)
-            Configuration.SERVER_ADDRESS[i] = Byte.parseByte(args[i]);
+            Configuration.SERVER_ADDRESS[i] = (byte)(Integer.parseInt(args[i]) & 255);
         if(args.length>4){
             Configuration.SERVER_PORT = Integer.parseInt(args[4]);
         }
