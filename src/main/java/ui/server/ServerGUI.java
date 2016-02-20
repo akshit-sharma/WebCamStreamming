@@ -8,6 +8,10 @@ import ui.ImagePanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -25,8 +29,9 @@ import java.util.concurrent.TimeUnit;
 public class ServerGUI implements WindowListener{
 
     private JTextField jTextField;
-    private TextArea chatArea;
+    private JTextArea chatArea;
     private ImagePanel imagePanel;
+
 
     public ServerGUI(){
 
@@ -39,12 +44,14 @@ public class ServerGUI implements WindowListener{
 
         imageArea.add(imagePanel, BorderLayout.CENTER);
 
-        chatArea = new TextArea();
+        chatArea = new JTextArea();
         chatArea.setEditable(false);
 
         JPanel chatBar = new JPanel();
         jTextField = new JTextField();
         JButton sendButton = new JButton("Send");
+
+        new TextStream(chatArea,jTextField,sendButton).start();
 
         chatBar.setLayout(new BorderLayout());
         chatBar.add(jTextField, BorderLayout.CENTER);
@@ -145,8 +152,6 @@ class VideoStreamer extends Thread{
                 socket = serverSocket.accept();
                 clientAdd = socket.getInetAddress();
 
-                new VideoStreamer(2).start();
-
                 inputStream = socket.getInputStream();
 
                 while (true){
@@ -192,34 +197,39 @@ class VideoStreamer extends Thread{
             System.exit(1);
         }
 
-        InetAddress connectAdd = clientAdd;
+        InetAddress connectAdd = null;
+        try {
+            connectAdd = InetAddress.getByAddress(Configuration.SERVER_ADDRESS);
 
-        while(true){
+            while(true){
 
-            try {
+                try {
 
-                sock = new Socket(connectAdd,Configuration.CLIENT_PORT);
-                OutputStream outputStream = sock.getOutputStream();
-                BufferedImage image = webcam.getImage();
+                    sock = new Socket(connectAdd,Configuration.CLIENT_PORT);
+                    OutputStream outputStream = sock.getOutputStream();
+                    BufferedImage image = webcam.getImage();
 
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                ImageIO.write(image, "JPG", byteArrayOutputStream);
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    ImageIO.write(image, "JPG", byteArrayOutputStream);
 
-                byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
-                outputStream.write(size);
-                outputStream.write(byteArrayOutputStream.toByteArray());
-                outputStream.flush();
-                TimeUnit.MILLISECONDS.sleep(10);
-                sock.close();
+                    byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+                    outputStream.write(size);
+                    outputStream.write(byteArrayOutputStream.toByteArray());
+                    outputStream.flush();
+                    TimeUnit.MILLISECONDS.sleep(10);
+                    sock.close();
 
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
             }
-
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
     }
 
@@ -229,18 +239,77 @@ class VideoStreamer extends Thread{
 
         switch (status){
             case 0: new VideoStreamer(1).start();
+                new VideoStreamer(2).start();
                     break;
             case 1: recieve();
                     break;
             case 2:
                 try {
-                    sleep(1000);
+                    sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 transmit();
                     break;
         }
+
+    }
+}
+
+class TextStream extends Thread {
+
+    static ServerSocket ss;
+    static Socket s;
+    static DataInputStream din;
+    static DataOutputStream dout;
+    JTextArea chatArea;
+    JTextField jTextField;
+    JButton sendButton;
+
+    public TextStream(final JTextArea jTextArea, final JTextField jTextField, JButton sendButton) {
+        chatArea = jTextArea;
+        this.jTextField = jTextField;
+        this.sendButton = sendButton;
+
+        sendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                try{
+
+                    String msgout = "";
+                    msgout = jTextField.getText().trim();
+                    dout.writeUTF(msgout);
+                    chatArea.setText(chatArea.getText().trim()+"\nMe:\t"+jTextField.getText());
+
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
+    @Override
+    public void run() {
+        super.run();
+
+
+
+                String msgin = "";
+                try {
+                    ss = new ServerSocket(Configuration.CLIENT_TEXT);
+                    s = ss.accept();
+                    din = new DataInputStream(s.getInputStream());
+                    dout = new DataOutputStream(s.getOutputStream());
+                    while (!msgin.equals("exit")) {
+
+                        msgin = din.readUTF();
+                        chatArea.setText(chatArea.getText().trim() + "\nPaencho:\t" + msgin);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
     }
 }

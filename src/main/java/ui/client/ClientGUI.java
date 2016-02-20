@@ -7,6 +7,8 @@ import ui.ImagePanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
@@ -249,4 +251,68 @@ class VideoStreamer extends Thread{
         }
 
     }
+}
+
+
+class TextStream extends Thread {
+
+    static ServerSocket ss;
+    static Socket s;
+    static DataInputStream din;
+    static DataOutputStream dout;
+    JTextArea chatArea;
+    JTextField jTextField;
+    JButton sendButton;
+
+    public TextStream(final JTextArea jTextArea, final JTextField jTextField, JButton sendButton) {
+        chatArea = jTextArea;
+        this.jTextField = jTextField;
+        this.sendButton = sendButton;
+
+        sendButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                try{
+
+                    String msgout = "";
+                    msgout = jTextField.getText().trim();
+                    dout.writeUTF(msgout);
+                    chatArea.setText(chatArea.getText().trim()+"\nMe:\t"+jTextField.getText());
+
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+
+    }
+
+    @Override
+    public void run() {
+        super.run();
+
+
+        try {
+            InetAddress inetAddress = InetAddress.getByAddress((Configuration.SERVER_ADDRESS));
+
+            String msgin = "";
+
+            s = new Socket(inetAddress, Configuration.SERVER_TEXT);
+            din = new DataInputStream(s.getInputStream());
+            dout = new DataOutputStream(s.getOutputStream());
+            msgin = "";
+            while (!msgin.equals("exit")) {
+
+                msgin = din.readUTF();
+                chatArea.setText(chatArea.getText().trim() + "\nPaencho:\t" + msgin);
+
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
