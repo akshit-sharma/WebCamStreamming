@@ -298,7 +298,7 @@ class TextStream extends Thread {
 
                 String msgin = "";
                 try {
-                    ss = new ServerSocket(Configuration.CLIENT_TEXT);
+                    ss = new ServerSocket(Configuration.SERVER_TEXT);
                     s = ss.accept();
                     din = new DataInputStream(s.getInputStream());
                     dout = new DataOutputStream(s.getOutputStream());
